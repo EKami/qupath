@@ -342,6 +342,7 @@ public class QuPathGUI implements ModeWrapper, ImageDataWrapper<BufferedImage>, 
 	
 	private String buildString = null;
 	private String versionString = null;
+	private String nnVersionString = null;
 	
 	// For development... don't run update check if running from a directory (rather than a Jar)
 	private boolean disableAutoUpdateCheck = new File(qupath.lib.gui.QuPathGUI.class.getProtectionDomain().getCodeSource().getLocation().getFile()).isDirectory();
@@ -511,7 +512,7 @@ public class QuPathGUI implements ModeWrapper, ImageDataWrapper<BufferedImage>, 
 		Scene scene;
 		try {
 			Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-			scene = new Scene(pane, bounds.getWidth()*0.8, bounds.getHeight()*0.8);
+			scene = new Scene(pane, bounds.getWidth()*0.85, bounds.getHeight()*0.85);
 		} catch (Exception e) {
 			logger.debug("Unable to set stage size using primary screen {}", Screen.getPrimary());
 			scene = new Scene(pane, 1000, 600);
@@ -2089,12 +2090,15 @@ public class QuPathGUI implements ModeWrapper, ImageDataWrapper<BufferedImage>, 
 				if (imageData.isChanged() || !filePrevious.exists()) {
 					DialogButton response = DialogButton.YES;
 					if (imageData.isChanged()) {
-						response = DisplayHelpers.showYesNoCancelDialog("Save changes", "Save changes to " + entryPrevious.getImageName() + "?");
-					}
-					if (response == DialogButton.YES)
-						PathIO.writeImageData(filePrevious, imageData);
-					else if (response == DialogButton.CANCEL)
+						DisplayHelpers.showErrorMessage("Work not saved",
+								"Please click on the upload button to save your work before moving on to the next slide!");
 						return;
+//						response = DisplayHelpers.showYesNoCancelDialog("Save changes", "Save changes to " + entryPrevious.getImageName() + "?");
+					}
+//					if (response == DialogButton.YES)
+//						PathIO.writeImageData(filePrevious, imageData);
+//					else if (response == DialogButton.CANCEL)
+//						return;
 				}
 			}
 		}
@@ -2287,11 +2291,13 @@ public class QuPathGUI implements ModeWrapper, ImageDataWrapper<BufferedImage>, 
 					Manifest manifest = new Manifest(url.openStream());
 					Attributes attributes = manifest.getMainAttributes();
 					String version = attributes.getValue("Implementation-Version");
+					String nnVersion = attributes.getValue("NN-Version");
 					String buildTime = attributes.getValue("QuPath-build-time");
 					if (version == null || buildTime == null)
 						continue;
 					buildString = "Version: " + version + "\n" + "Build time: " + buildTime;
 					versionString = version;
+					nnVersionString = nnVersion;
 					return true;
 				} catch (IOException e) {
 					logger.error("Error reading manifest", e);
@@ -3278,9 +3284,9 @@ public class QuPathGUI implements ModeWrapper, ImageDataWrapper<BufferedImage>, 
 		case OPEN_IMAGE_OR_URL:
 			return createCommandAction(new OpenCommand(this, true), "Open URL...", null, new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
 		case SAVE_DATA_AS:
-			return createCommandAction(new SerializeImageDataCommand(this, false), "Save As", null, new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));			
+			return createCommandAction(new SerializeImageDataCommand(this, false, true), "Save As", null, new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN));
 		case SAVE_DATA:
-			return createCommandAction(new SerializeImageDataCommand(this, true), "Save", null, new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
+			return createCommandAction(new SerializeImageDataCommand(this, true, true), "Save", null, new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
 		case SHOW_ANNOTATIONS:
 			return createSelectableCommandAction(overlayOptions.showAnnotationsProperty(), "Show annotations", PathIconFactory.PathIcons.ANNOTATIONS, new KeyCodeCombination(KeyCode.A));
 		case FILL_ANNOTATIONS:
@@ -4105,7 +4111,7 @@ public class QuPathGUI implements ModeWrapper, ImageDataWrapper<BufferedImage>, 
 			return;
 		String name = "QuPath";
 		if (versionString != null)
-			name = name + " (" + versionString + ")";
+			name = name + " (" + versionString + ") - NN converter edition ("+ nnVersionString +")";
 		ImageData<?> imageData = getImageData();
 		if (imageData == null || imageData.getServer() == null)
 			stage.setTitle(name);
@@ -4187,10 +4193,10 @@ public class QuPathGUI implements ModeWrapper, ImageDataWrapper<BufferedImage>, 
 		
 		// Enable disable actions
 		updateProjectActionStates();
-		
+
 		// Ensure we have the required directories
 //		getProjectClassifierDirectory(true);
-		getProjectScriptsDirectory(true);
+//		getProjectScriptsDirectory(true);
 		
 		logger.info("Project set to {}", project);
 	}
