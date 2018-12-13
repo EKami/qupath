@@ -658,7 +658,9 @@ public class PathPrefs {
 	private static BooleanProperty brushCreateNewObjects = createPersistentPreference("brushCreateNew", true);
 	private static BooleanProperty brushScaleByMag = createPersistentPreference("brushScaleByMag", true);
 	private static IntegerProperty brushDiameter = createPersistentPreference("brushDiameter", 50);
-	
+	private static FloatProperty maxROIHandleSize = new SimpleFloatProperty(2.0f);
+
+
 	public static BooleanProperty brushCreateNewObjectsProperty() {
 		return brushCreateNewObjects;
 	}
@@ -666,7 +668,11 @@ public class PathPrefs {
 	public static BooleanProperty brushScaleByMagProperty() {
 		return brushScaleByMag;
 	}
-	
+
+	public static FloatProperty maxROIHandleSizeProperty() {
+		return maxROIHandleSize;
+	}
+
 	public static IntegerProperty brushDiameterProperty() {
 		return brushDiameter;
 	}

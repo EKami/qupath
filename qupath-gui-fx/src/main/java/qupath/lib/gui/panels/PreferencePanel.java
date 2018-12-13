@@ -274,6 +274,11 @@ public class PreferencePanel {
 				category,
 				"Set the default point radius");
 
+		addPropertyPreference(PathPrefs.maxROIHandleSizeProperty(), Float.class,
+				"ROI handle size",
+				category,
+				"Set the max ROI handle size");
+
 
 		/*
 		 * Object colors

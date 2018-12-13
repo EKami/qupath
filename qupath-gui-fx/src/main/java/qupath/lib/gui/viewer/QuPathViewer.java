@@ -1740,7 +1740,7 @@ public class QuPathViewer implements TileListener<BufferedImage>, PathObjectHier
 		if (roiEditor.getROI() instanceof PathArea) {
 			ROI pathROI = roiEditor.getROI();
 			if (pathROI instanceof AreaROI || roiEditor.getROI() instanceof PolygonROI)
-				size = Math.min(Math.min(size,1), Math.min(pathROI.getBoundsWidth()/32, pathROI.getBoundsHeight()/32));// max size for Polygon is 2
+				size = Math.min(Math.min(size,Math.max(0.5,PathPrefs.maxROIHandleSizeProperty().doubleValue())), Math.min(pathROI.getBoundsWidth()/32, pathROI.getBoundsHeight()/32));
 			else
 				size = Math.min(size, Math.min(pathROI.getBoundsWidth()/8, pathROI.getBoundsHeight()/8));
 		}
