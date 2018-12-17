@@ -55,13 +55,14 @@ public class UserProfileChooserCommand implements PathCommand {
         grid.add(helpText, 0, 0);
 
         ButtonType specialistBtn =  QuPathGUI.UserProfileChoice.SPECIALIST_MODE.getButton();
+        ButtonType structuresBtn =  QuPathGUI.UserProfileChoice.STRUCTURES_MODE.getButton();
         ButtonType contractorBtn =  QuPathGUI.UserProfileChoice.CONTRACTOR_MODE.getButton();
         ButtonType reviewerBtn =  QuPathGUI.UserProfileChoice.REVIEWER_MODE.getButton();
         ButtonType adminBtn =  QuPathGUI.UserProfileChoice.ADMIN_MODE.getButton();
 
         pane.setCenter(grid);
         dialog.getDialogPane().setContent(pane);
-        dialog.getDialogPane().getButtonTypes().setAll(specialistBtn, contractorBtn, reviewerBtn, adminBtn);
+        dialog.getDialogPane().getButtonTypes().setAll(specialistBtn, structuresBtn, contractorBtn, reviewerBtn, adminBtn);
         Optional<ButtonType> result = dialog.showAndWait();
 
         if (result.isPresent()) {
@@ -70,6 +71,9 @@ public class UserProfileChooserCommand implements PathCommand {
 
             if (specialistBtn.equals(res)) {
                 choice = QuPathGUI.UserProfileChoice.SPECIALIST_MODE;
+            }
+            if (structuresBtn.equals(res)) {
+                choice = QuPathGUI.UserProfileChoice.STRUCTURES_MODE;
             }
             else if (contractorBtn.equals(res)) {
                 choice = QuPathGUI.UserProfileChoice.CONTRACTOR_MODE;

@@ -80,6 +80,7 @@ public class ExportWSICommand implements PathCommand {
             List<String> choices = new ArrayList<>();
             choices.add(firstChoiceName);
             choices.add("Give to " + QuPathGUI.UserProfileChoice.SPECIALIST_MODE);
+            choices.add("Give to " + QuPathGUI.UserProfileChoice.STRUCTURES_MODE);
             choices.add("Give to " + QuPathGUI.UserProfileChoice.CONTRACTOR_MODE);
             choices.add("Give to " + QuPathGUI.UserProfileChoice.REVIEWER_MODE);
             if (currentChoice == QuPathGUI.UserProfileChoice.ADMIN_MODE) {
@@ -101,8 +102,10 @@ public class ExportWSICommand implements PathCommand {
                 } else if (choice.equals(choices.get(2))) {
                     reassignValidationOwnership(wsi, QuPathGUI.UserProfileChoice.SPECIALIST_MODE);
                 } else if (choice.equals(choices.get(3))) {
-                    reassignValidationOwnership(wsi, QuPathGUI.UserProfileChoice.CONTRACTOR_MODE);
+                    reassignValidationOwnership(wsi, QuPathGUI.UserProfileChoice.STRUCTURES_MODE);
                 } else if (choice.equals(choices.get(4))) {
+                    reassignValidationOwnership(wsi, QuPathGUI.UserProfileChoice.CONTRACTOR_MODE);
+                } else if (choice.equals(choices.get(5))) {
                     reassignValidationOwnership(wsi, null);
                 }
             }

@@ -65,7 +65,7 @@ public abstract class AbstractPathTool implements PathTool, QuPathViewerListener
 	protected boolean checkIfActionValid(PathObject object) {
 		if (QuPathGUI.getInstance().getUserProfileChoice() == QuPathGUI.UserProfileChoice.CONTRACTOR_MODE &&
 				object != null) {
-			return object.getPathClass() == null || !object.getPathClass().getName().startsWith("ROI_");
+			return object.getPathClass() == null || !object.getPathClass().getName().startsWith("ROI_") || !object.getPathClass().getName().startsWith("Inflammation");
 		}
 		return true;
 	}

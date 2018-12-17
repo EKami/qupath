@@ -63,7 +63,7 @@ public class PolygonEditTool extends MoveTool {
         }
 
 
-        boolean isLocked = ((PathAnnotationObject) pathObject).isLocked();
+        boolean isLocked = ((PathAnnotationObject) pathObject).isLocked() || !checkIfActionValid(viewer.getSelectedObject());
         boolean eraser = isEraser(e);
         boolean append = isAppend(e);
         if (!isLocked && (pathObject.getROI() instanceof PolygonROI) && (eraser || append)) {
@@ -84,7 +84,7 @@ public class PolygonEditTool extends MoveTool {
         }
 
 
-        boolean isLocked = ((PathAnnotationObject) pathObject).isLocked();
+        boolean isLocked = ((PathAnnotationObject) pathObject).isLocked() || !checkIfActionValid(viewer.getSelectedObject());
         boolean eraser = isEraser(e);
         boolean append = isAppend(e);
         if (!isLocked && (pathObject.getROI() instanceof PolygonROI) && (eraser || append)) {
@@ -146,7 +146,7 @@ public class PolygonEditTool extends MoveTool {
         }
 
 
-        boolean isLocked = ((PathAnnotationObject) pathObject).isLocked();
+        boolean isLocked = ((PathAnnotationObject) pathObject).isLocked() || !checkIfActionValid(viewer.getSelectedObject());
         boolean eraser = isEraser(e);
         boolean append = isAppend(e);
         if (!isLocked && (pathObject.getROI() instanceof PolygonROI) && (eraser || append)) {

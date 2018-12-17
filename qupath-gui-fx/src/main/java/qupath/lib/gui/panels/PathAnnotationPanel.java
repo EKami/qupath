@@ -195,8 +195,12 @@ public class PathAnnotationPanel implements PathObjectSelectionListener, ImageDa
             String input = DisplayHelpers.showInputDialog("Add class", "Class name", initialInput);
 
             if (qupath.getUserProfileChoice() == QuPathGUI.UserProfileChoice.CONTRACTOR_MODE && input != null &&
-                    input.startsWith("ROI_")) {
+                    input.startsWith("ROI_") ) {
                 DisplayHelpers.showMessageDialog("Error", "ROI annotations cannot be created in contractor mode!");
+                return;
+            } else if (qupath.getUserProfileChoice() == QuPathGUI.UserProfileChoice.CONTRACTOR_MODE && input != null &&
+                    input.startsWith("Inflammation") ) {
+                DisplayHelpers.showMessageDialog("Error", "Inflammation annotations cannot be created in contractor mode!");
                 return;
             } else if (qupath.getUserProfileChoice() == QuPathGUI.UserProfileChoice.SPECIALIST_MODE && input != null &&
                     !input.startsWith("ROI_")) {
@@ -533,6 +537,10 @@ public class PathAnnotationPanel implements PathObjectSelectionListener, ImageDa
                     pathClass.getName().startsWith("ROI_")) {
                 DisplayHelpers.showMessageDialog("Error", "You cannot assign ROI labels in contractor mode!");
                 return;
+            } else if (qupath.getUserProfileChoice() == QuPathGUI.UserProfileChoice.CONTRACTOR_MODE &&
+                    pathClass.getName().startsWith("Inflammation")) {
+                DisplayHelpers.showMessageDialog("Error", "You cannot assign Inflammation labels in contractor mode!");
+                return;
             }
 
             if (pathObject.getPathClass() == pathClass)
@@ -585,6 +593,10 @@ public class PathAnnotationPanel implements PathObjectSelectionListener, ImageDa
                         DisplayHelpers.showMessageDialog("Warning", "ROI annotations cannot be deleted in contractor mode!");
                         return;
                     }
+                    if (o.getPathClass().getName().contains("Inflammation")) {
+                        DisplayHelpers.showMessageDialog("Warning", "Inflammation annotations cannot be deleted in contractor mode!");
+                        return;
+                    }
                 }
             }
 
@@ -627,7 +639,7 @@ public class PathAnnotationPanel implements PathObjectSelectionListener, ImageDa
         Action action = new Action("Delete all", e -> {
 
             if (qupath.getUserProfileChoice() == QuPathGUI.UserProfileChoice.CONTRACTOR_MODE) {
-                DisplayHelpers.showMessageDialog("Warning", "ROI annotations cannot be deleted in contractor mode!");
+                DisplayHelpers.showMessageDialog("Warning", "ROI Or Inflammation annotations cannot be deleted in contractor mode!");
                 return;
             }
 

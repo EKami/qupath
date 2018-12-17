@@ -298,7 +298,8 @@ public class QuPathGUI implements ModeWrapper, ImageDataWrapper<BufferedImage>, 
     }
 
     public enum UserProfileChoice {
-        SPECIALIST_MODE("Specialist mode", 3),
+        SPECIALIST_MODE("Specialist mode", 4),
+        STRUCTURES_MODE("Structures mode", 3),
         CONTRACTOR_MODE("Contractor mode", 2),
         REVIEWER_MODE("Reviewer mode", 1),
         ADMIN_MODE("Admin mode", 0); // Mode which uses QuPath normally
@@ -2106,6 +2107,10 @@ public class QuPathGUI implements ModeWrapper, ImageDataWrapper<BufferedImage>, 
                     } else if (QuPathGUI.getInstance().getUserProfileChoice() == UserProfileChoice.CONTRACTOR_MODE &&
                             pathClassToSet.getName().startsWith("ROI_")) {
                         DisplayHelpers.showMessageDialog("Error", "You cannot assign ROI labels in contractor mode!");
+                        continue;
+                    } else if (QuPathGUI.getInstance().getUserProfileChoice() == UserProfileChoice.CONTRACTOR_MODE &&
+                            pathClassToSet.getName().startsWith("Inflammation")) {
+                        DisplayHelpers.showMessageDialog("Error", "You cannot assign Inflammation labels in contractor mode!");
                         continue;
                     }
                     pathObject.setPathClass(pathClassToSet);
@@ -4305,10 +4310,12 @@ public class QuPathGUI implements ModeWrapper, ImageDataWrapper<BufferedImage>, 
     private void updateProjectActionStates() {
         Project<?> project = getProject();
         getAction(GUIActions.PROJECT_NEW).setDisabled(getUserProfileChoice() == UserProfileChoice.CONTRACTOR_MODE ||
+                getUserProfileChoice() == UserProfileChoice.STRUCTURES_MODE ||
                 getUserProfileChoice() == UserProfileChoice.REVIEWER_MODE);
         getAction(GUIActions.PROJECT_CLOSE).setDisabled(project == null);
         getAction(GUIActions.PROJECT_IMPORT_IMAGES).setDisabled(project == null ||
                 getUserProfileChoice() == UserProfileChoice.CONTRACTOR_MODE ||
+                getUserProfileChoice() == UserProfileChoice.STRUCTURES_MODE ||
                 getUserProfileChoice() == UserProfileChoice.REVIEWER_MODE);
         getAction(GUIActions.PROJECT_EXPORT_IMAGE_LIST).setDisabled(project == null);
         getAction(GUIActions.PROJECT_METADATA).setDisabled(project == null);

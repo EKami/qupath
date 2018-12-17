@@ -620,6 +620,11 @@ public class DisplayHelpers {
                 DisplayHelpers.showMessageDialog("Warning", "ROI annotations cannot be deleted in contractor mode!");
                 return false;
             }
+            if (pathObjectSelected.getPathClass() != null &&
+                    pathObjectSelected.getPathClass().getName().contains("Inflammation")) {
+                DisplayHelpers.showMessageDialog("Warning", "Inflammation annotations cannot be deleted in contractor mode!");
+                return false;
+            }
         }
 
         // Deselect first
