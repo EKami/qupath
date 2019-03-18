@@ -61,6 +61,11 @@ public class ExportWSICommand implements PathCommand {
                 "be send for review and you won't be able to edit it anymore. Proceed?");
     }
 
+    private String getSpecialistConfirmation(String[] choices) {
+        return DisplayHelpers.showChoiceDialog("Warning", "Warning: Once you validate a WSI it will " +
+                "be send for review and you won't be able to edit it anymore. Proceed?\n", choices, null);
+    }
+
     @Override
     public void run() {
         ImageData<BufferedImage> imgData = qupath.getImageData();
@@ -107,6 +112,17 @@ public class ExportWSICommand implements PathCommand {
                     reassignValidationOwnership(wsi, QuPathGUI.UserProfileChoice.CONTRACTOR_MODE);
                 } else if (choice.equals(choices.get(5))) {
                     reassignValidationOwnership(wsi, null);
+                }
+            }
+        }
+        else if (currentChoice == QuPathGUI.UserProfileChoice.SPECIALIST_MODE) {
+            String[] choices = new String[]{"Validate for Structure mode", "Validate directly for Reviewers"};
+            String choice = getSpecialistConfirmation(choices);
+            if (choice != null) {
+                if (choice.equals(choices[0])) {
+                    saveValidatedMeta(wsi, QuPathGUI.UserProfileChoice.SPECIALIST_MODE);
+                } else {
+                    saveValidatedMeta(wsi, QuPathGUI.UserProfileChoice.CONTRACTOR_MODE);
                 }
             }
         } else {

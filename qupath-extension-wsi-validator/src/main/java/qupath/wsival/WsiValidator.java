@@ -35,7 +35,7 @@ public class WsiValidator implements QuPathExtension {
 
         try {
             ImageView imageView = new ImageView(getValidIcon(QuPathGUI.iconSize, QuPathGUI.iconSize));
-            Button btn = getActionButton(QuPathGUI.createCommandAction(exportWsiCommand, "Export WSI",
+            Button btn = getActionButton(QuPathGUI.createCommandAction(exportWsiCommand, "Validate WSI",
                     imageView, null));
 
             // TODO add action shortcut
