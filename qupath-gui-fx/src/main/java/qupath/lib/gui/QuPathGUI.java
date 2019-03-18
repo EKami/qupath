@@ -2098,13 +2098,7 @@ public class QuPathGUI implements ModeWrapper, ImageDataWrapper<BufferedImage>, 
                 for (PathObject pathObject : viewer.getAllSelectedObjects()) {
                     if (!pathObject.isAnnotation() || pathObject.getPathClass() == pathClassToSet)
                         continue;
-                    if (QuPathGUI.getInstance().getUserProfileChoice() == QuPathGUI.UserProfileChoice.SPECIALIST_MODE &&
-                            !pathClassToSet.getName().startsWith("ROI_")) {
-                        boolean confirm = DisplayHelpers.showConfirmDialog("Setting non ROI",
-                                "You are trying to set a label without an ROI_ prefix in Specialist mode, " +
-                                        "are you sure you want to do that?");
-                        if (!confirm) continue;
-                    } else if (QuPathGUI.getInstance().getUserProfileChoice() == UserProfileChoice.CONTRACTOR_MODE &&
+                    if (QuPathGUI.getInstance().getUserProfileChoice() == UserProfileChoice.CONTRACTOR_MODE &&
                             pathClassToSet.getName().startsWith("ROI_")) {
                         DisplayHelpers.showMessageDialog("Error", "You cannot assign ROI labels in contractor mode!");
                         continue;
