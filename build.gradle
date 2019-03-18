@@ -3,7 +3,7 @@
  */
 
 def nnVersion = "14"
-def qupathVersion = "0.1.3-SNAPSHOT"   // Current version for QuPath
+def qupathVersion = "0.1.5-SNAPSHOT"   // Current version for QuPath
 def qupathVendor = "QuPath developers" // Requested by JavaFX packager
 def includeJRE = true                  // Should Java be included in any native packages?
 def additionalResourcesDir = 'build/additional' // Where to store additional files needed for final package
