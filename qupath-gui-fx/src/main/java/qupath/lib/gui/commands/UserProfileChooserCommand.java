@@ -14,6 +14,8 @@ import qupath.lib.gui.QuPathGUI;
 import qupath.lib.gui.commands.interfaces.PathCommand;
 import qupath.lib.gui.helpers.DisplayHelpers;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class UserProfileChooserCommand implements PathCommand {
@@ -68,6 +70,15 @@ public class UserProfileChooserCommand implements PathCommand {
         if (result.isPresent()) {
             ButtonType res = result.get();
             QuPathGUI.UserProfileChoice choice = null;
+            Map<QuPathGUI.UserProfileChoice, String> passMap = new HashMap<QuPathGUI.UserProfileChoice, String>()
+            {
+                {
+                    put(QuPathGUI.UserProfileChoice.SPECIALIST_MODE, "Pass4Spec");
+                    put(QuPathGUI.UserProfileChoice.STRUCTURES_MODE, "structMo2");
+                    put(QuPathGUI.UserProfileChoice.REVIEWER_MODE, "RevUair");
+                    put(QuPathGUI.UserProfileChoice.ADMIN_MODE, "Adm2019");
+                }
+            };
 
             if (specialistBtn.equals(res)) {
                 choice = QuPathGUI.UserProfileChoice.SPECIALIST_MODE;
@@ -85,11 +96,20 @@ public class UserProfileChooserCommand implements PathCommand {
                 choice = QuPathGUI.UserProfileChoice.ADMIN_MODE;
             }
 
-            String confirmText = "Are you sure to use the " +  choice + "?";
-            boolean confirm = DisplayHelpers.showConfirmDialog("Confirm profile", confirmText);
-            if (!confirm) {
-                getWindowChoice();
-                return;
+            if (choice != QuPathGUI.UserProfileChoice.CONTRACTOR_MODE) {
+                String confirmText = "Please enter the password for the " + choice + " below";
+                String value = DisplayHelpers.showInputDialog("Confirm password", confirmText, "");
+                if (value == null) {
+                    DisplayHelpers.showMessageDialog("Error", "Please enter a valid value");
+                    getWindowChoice();
+                    return;
+                }
+
+                if (!passMap.get(choice).equals(value)) {
+                    DisplayHelpers.showMessageDialog("Error", "Wrong password");
+                    getWindowChoice();
+                    return;
+                }
             }
             qupath.setUserProfileChoice(choice);
         }
