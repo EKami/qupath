@@ -16,15 +16,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class OpenFromRootPathCommand implements PathCommand {
     private QuPathGUI qupath;
-    private static final String commandName = "Project: Import Mirax files";
+    private List<String> wsiExtensions = Arrays.asList(".*\\.mrxs", ".*\\.svs");
+    private static final String commandName = "Project: Import WSIs";
     final private static Logger logger = LoggerFactory.getLogger(OpenFromRootPathCommand.class);
     private Map<String, String> fileList;
     private List<String> duplicates;
@@ -98,7 +96,7 @@ public class OpenFromRootPathCommand implements PathCommand {
 
         ProgressDialog progress = new ProgressDialog(worker);
         progress.setWidth(500);
-        progress.setTitle("Importing Mirax files");
+        progress.setTitle("Importing WSIs");
 
         qupath.submitShortTask(worker);
         progress.showAndWait();
@@ -170,11 +168,13 @@ public class OpenFromRootPathCommand implements PathCommand {
                 alert.showAndWait();
                 return;
             }
-            List<Path> mrxsFiles = new ArrayList<>();
-            Files.find(Paths.get(dir.toString()), 9999, (p, bfa) -> bfa.isRegularFile() &&
-                    p.getFileName().toString().matches(".*\\.mrxs"))
-                    .forEach(mrxsFiles::add);
-            openInProject(mrxsFiles);
+            List<Path> wsisFiles = new ArrayList<>();
+            for (String ext: wsiExtensions) {
+                Files.find(Paths.get(dir.toString()), 9999, (p, bfa) -> bfa.isRegularFile() &&
+                        p.getFileName().toString().matches(ext))
+                        .forEach(wsisFiles::add);
+            }
+            openInProject(wsisFiles);
         } catch (IOException e) {
             e.printStackTrace();
         }
