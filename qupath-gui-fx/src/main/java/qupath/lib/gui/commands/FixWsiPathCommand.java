@@ -16,13 +16,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FixWsiPathCommand implements PathCommand {
     private QuPathGUI qupath;
+    private List<String> wholeSlideExtensions = Arrays.asList(new String[]{
+            ".svs", ".tif", ".tiff", ".vms", ".ndpi", ".scn", ".czi", ".zvi", ".mrxs"});
     private static final String commandName = "Project: Fix project file path";
     final private static Logger logger = LoggerFactory.getLogger(FixWsiPathCommand.class);
 
@@ -97,9 +96,18 @@ public class FixWsiPathCommand implements PathCommand {
         try {
             List<ProjectImageEntry<BufferedImage>> projectWsiFiles = qupath.getProject().getImageList();
             List<Path> localWsiFiles = new ArrayList<>();
-            Files.find(Paths.get(dir.toString()), 9999, (p, bfa) -> bfa.isRegularFile() &&
-                    p.getFileName().toString().matches(".*\\.mrxs"))
-                    .forEach(localWsiFiles::add);
+            Files.find(Paths.get(dir.toString()), 9999, (p, bfa) -> {
+                boolean res1 = bfa.isRegularFile();
+                boolean res2 = false;
+                for (String ext: wholeSlideExtensions) {
+                    if(p.getFileName().toString().matches(".*" + ext)) {
+                        res2 = true;
+                        break;
+                    }
+                }
+                return res1 && res2;
+            }).forEach(localWsiFiles::add);
+
             fixPath(projectWsiFiles, localWsiFiles);
         } catch (IOException e) {
             e.printStackTrace();
